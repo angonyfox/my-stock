@@ -34,3 +34,30 @@ wen46.settrade.com to wen066.settrade.com
 turn on dev tool net work, check preserve log, login to broker main page, check request form data of https://wen066.settrade.com/LoginRepOnRole.jsp (txtBrokerId)
 ### how to get account id?
 open place order from broker menu, open dev tool, check form data of https://wen46.settrade.com/daytradeflex/streamingSeos.jsp (txtAccountNo)
+
+## Usage in q
+Before starting q session, you need to run `setenv.bat` and `login.bat`. Then, you should get `cookie.txt` which can be used in further commands
+```
+set\win\setenv.bat
+set\win\login.bat
+q -p 6666
+```
+You can then runs q functions in repl
+```q
+\l set/q/set.q
+
+pf: .set.portfolio[]
+st: .set.orderStatus[]
+
+.set.ticker `BANPU
+.set.bov `BANPU
+.set.last `BANPU
+.set.close `BANPU
+
+.set.index[]
+
+/id: .set.placeOrder[`B; `BANPU; 100; 15]
+/.set.cancelOrder[`BANPU; `$id]
+/.set.placeBulkOrder ([]side: `B`S; sym: `BANPU`SYMC; qty: (10; 20); price: (100f; 120f))
+/.set.cancelAllStatus[.set.orderStatus[]; `Queuing]
+```

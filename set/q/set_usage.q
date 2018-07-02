@@ -1,5 +1,6 @@
 /runs this in command line before starting Q
 /set\win\setenv.bat
+/set\win\login.bat
 
 \l set/q/set.q
 

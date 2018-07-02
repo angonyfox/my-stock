@@ -1,5 +1,6 @@
 /runs this in command line before starting Q
 /set\win\setenv.bat
+/set\win\login.bat
 
 /.set.setenv: {system "set\\win\\setenv.bat"};
 /.set.login: {system "set\\win\\login.bat"};
