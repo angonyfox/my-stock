@@ -15,15 +15,16 @@ adjustInvestment: {
   xx: calcRatio calcInvest update qty + 100 from x where investRatio=min investRatio;
   $[(exec first remain from calcSummary xx) > 0; adjustInvestment[xx]; x]}
 
+extractPrices: {(`last`close#x), exec first bid, first bidQty, first ask, first askQty, ask2: ask[1], askQty2: askQty[1] from .set.int.parseBov x}'
 
 t: loadRes `response.json`response2.json
 t2: loadRes `rank_20180628_1.json`rank_20180628_2.json
-t2
+/t2: 5#t2
 input: select r, symbol, jittaPrice: price  from t2
 fqs: .set.fq each exec symbol from input
-
-extractPrices: {(`last`close#x), exec first bid, first bidQty, first ask, first askQty, ask2: ask[1], askQty2: askQty[1] from .set.int.parseBov x}'
 res: input ,'extractPrices fqs
+
+/calculate [qty] (to be executed) from column [price] to assumed execution price, [allocation] to cash amount we want to allocate to this position
 t: calcQty update price: ask, allocation: 1e5 from res
 port: calcRatio calcInvest select from t where r <= 30
 calcSummary port

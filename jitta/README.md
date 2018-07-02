@@ -28,16 +28,65 @@ r  market exchange symbol sector                 industry                       
 ## jitta_execute.q
 load live prices/order book and calculates order qty for given allocations
 ```
-r  symbol jittaPrice last  close bid   bidQty ask   askQty ask2  askQty2 price allocation qty   investAmount remainAmount investRatio
--------------------------------------------------------------------------------------------------------------------------------------
-1  TCAP   48.25      47.75 48.25 47.75 140200 48    130000 48.25 192200  48    100000     2000  96000        4000         3.2
-2  TISCO  85.5       84.75 85.5  84.75 20900  85    120000 85.25 104100  85    100000     1200  102000       -2000        3.4
-3  LALIN  5.75       5.8   5.75  5.7   50500  5.8   15100  5.85  29600   5.8   100000     17200 99760        240          3.32
-4  TMW    65.5       0     65.5  65.5  8400   66    800    66.25 500     66    100000     1500  99000        1000         3.3
-5  SPALI  24.2       24.1  24.2  24    119100 24.1  89900  24.2  47300   24.1  100000     4100  98810        1190         3.29
+q)input: select r, symbol, jittaPrice: price  from 5#loadRes `rank_20180628_1.json`rank_20180628_2.json
+r symbol jittaPrice
+-------------------
+1 TCAP   48.25
+2 TISCO  85.5
+3 LALIN  5.75
+4 TMW    65.5
+5 SPALI  24.2
+
+q)fqs: .set.fq each exec symbol from input
+q)res: input ,'extractPrices fqs
+r symbol jittaPrice last  close bid   bidQty ask   askQty ask2  askQty2
+-----------------------------------------------------------------------
+1 TCAP   48.25      46.5  46.75 46.25 83200  46.5  82800  46.75 156800
+2 TISCO  85.5       83.75 84    83.75 9000   84    38600  84.25 2300
+3 LALIN  5.75       5.4   5.4   5.4   60200  5.45  14700  5.5   8100
+4 TMW    65.5       64    64.75 64    2500   64.25 2000   64.5  4000
+5 SPALI  24.2       23.6  23.5  23.6  7300   23.7  27900  23.8  24000
+
+q)port: calcRatio calcInvest select from calcQty update price: ask, allocation: 1e5 from res
+r symbol jittaPrice last  close bid   bidQty ask   askQty ask2  askQty2 price allocation qty   investAmount remainAmount investRatio
+------------------------------------------------------------------------------------------------------------------------------------
+1 TCAP   48.25      46.5  46.75 46.25 83200  46.5  82800  46.75 156800  46.5  100000     2100  97650        2350         20.1
+2 TISCO  85.5       83.75 84    83.75 9000   84    38600  84.25 2300    84    100000     1100  92400        7600         19.02
+3 LALIN  5.75       5.4   5.4   5.4   60200  5.45  14700  5.5   8100    5.45  100000     18300 99735        265          20.53
+4 TMW    65.5       64    64.75 64    2500   64.25 2000   64.5  4000    64.25 100000     1500  96375        3625         19.84
+5 SPALI  24.2       23.6  23.5  23.6  7300   23.7  27900  23.8  24000   23.7  100000     4200  99540        460          20.49
+
+q)calcSummary port
+allocation investAmount remain
+------------------------------
+500000     485700       14300
+
+q)calcLiquidity port
+r symbol jittaPrice last  close bid   bidQty ask   askQty ask2  askQty2 price allocation qty   investAmount remainAmount investRatio liquidity
+----------------------------------------------------------------------------------------------------------------------------------------------
+1 TCAP   48.25      46.5  46.75 46.25 83200  46.5  82800  46.75 156800  46.5  100000     2100  97650        2350         20.1        237500
+2 TISCO  85.5       83.75 84    83.75 9000   84    38600  84.25 2300    84    100000     1100  92400        7600         19.02       39800
+3 LALIN  5.75       5.4   5.4   5.4   60200  5.45  14700  5.5   8100    5.45  100000     18300 99735        265          20.53       4500
+4 TMW    65.5       64    64.75 64    2500   64.25 2000   64.5  4000    64.25 100000     1500  96375        3625         19.84       4500
+5 SPALI  24.2       23.6  23.5  23.6  7300   23.7  27900  23.8  24000   23.7  100000     4200  99540        460          20.49       47700
+
+q)adjPort: adjustInvestment port
+r symbol jittaPrice last  close bid   bidQty ask   askQty ask2  askQty2 price allocation qty   investAmount remainAmount investRatio
+------------------------------------------------------------------------------------------------------------------------------------
+1 TCAP   48.25      46.5  46.75 46.25 83200  46.5  82800  46.75 156800  46.5  100000     2100  97650        2350         19.76
+2 TISCO  85.5       83.75 84    83.75 9000   84    38600  84.25 2300    84    100000     1200  100800       -800         20.4
+3 LALIN  5.75       5.4   5.4   5.4   60200  5.45  14700  5.5   8100    5.45  100000     18300 99735        265          20.18
+4 TMW    65.5       64    64.75 64    2500   64.25 2000   64.5  4000    64.25 100000     1500  96375        3625         19.5
+5 SPALI  24.2       23.6  23.5  23.6  7300   23.7  27900  23.8  24000   23.7  100000     4200  99540        460          20.14
+
+q)calcSummary adjPort
+allocation investAmount remain
+------------------------------
+500000     494100       5900
 ```
 optionally place orders and tracks live order status
 ```
+q)orders: select side: `B, sym: symbol, qty, price from adjPort
 side sym    qty   price
 -----------------------
 B    TCAP   2000  48
@@ -45,4 +94,5 @@ B    TISCO  1200  85
 B    LALIN  17200 5.8
 B    TMW    1500  66
 B    SPALI  4100  24.1
+q)executions: .set.placeBulkOrder orders
 ```
