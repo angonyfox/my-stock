@@ -5,8 +5,9 @@ echo "USERNAME ${SET_USERNAME}"
 echo "BROKER_CODE ${SET_BROKER_CODE}"
 DAT="txtLogin=${SET_USERNAME}&txtPassword=${SET_PASSWORD}&txtBrokerId=${SET_BROKER_CODE}&txtRole=&txtDefaultPage=&txtSecureKey=NONE&txtLanguage=English&txtUserClass=&txtLoginPage=tisco2%2Fpre_logged_in%2Fpage%2Flogin.jsp&txtService=&txtSystem=&txtRealRole=INTERNET&txtLoginType=&txtSessionId=&txtJSSupport=&txtMaintenanceLogin=&txtSTTLogin=${SET_USERNAME}&txtDefaultCentralServer=wwwa1.settrade.com&txtAccountNo=&txtUserName=${SET_USERNAME}&txtLoginFailed=&txtUKey=${SET_USERNAME}_${SET_BROKER_CODE}"
 echo $DAT
-rm -f cookie2.txt
-curl -b cookie.txt -c cookie2.txt "https://${SET_SERVER}/LoginBySystem.jsp" -H "Origin: https://${SET_SERVER}" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: en-US,en;q=0.8" -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" -H "Cache-Control: max-age=0" -H "Referer: https://${SET_SERVER}/LoginRepOnRole.jsp" -H "Connection: keep-alive" --data "$DAT"
+export HEADER='-H "Origin: https://${SET_SERVER}" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: en-US,en;q=0.8" -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" -H "Cache-Control: max-age=0" -H "Referer: https://${SET_SERVER}/LoginRepOnRole.jsp" -H "Connection: keep-alive"'
+#rm -f cookie2.txt
+curl -s -b cookie.txt -c cookie.txt "https://${SET_SERVER}/LoginBySystem.jsp" $HEADER --data "$DAT"
 
 #expect this kind of cookie
 # Netscape HTTP Cookie File

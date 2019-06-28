@@ -1,6 +1,9 @@
 /need to run "secrets\\setenv.bat" outside q session. somehow the env does not persist if running q
-system "cd c:/dev/personal/set-scripts"
-system "l q/set-api.q"
+/system "cd c:/dev/personal/set-scripts"
+/assuming working dir is linux
+/runs this in shell first
+/ '. ./setenv.sh'
+system "l ../q/set-api.q"
 
 tickers: {`tradeTime xasc flip `tradeTime`side`qty`price!flip {"TSff" {x$y}' x} each 4 cut x[`ticker]};
 
@@ -50,7 +53,7 @@ marketsummary[]
 
 tickers fastquote `BEM
 toTrades `LEE
-bov 
+bov
 fastquote `BEM
 quotes `SYMC
 quotes `LEE
@@ -58,6 +61,7 @@ quotes `LEE
 mtrades `S50U16`S50Z16`S50H17
 fetchPortfolio[]
 fetchAndParsePortfolio[]
+fetchAndParsePortfolioDeriv[]
 
 x: fastquote `CK
 x2: fastquote `CK
@@ -69,7 +73,7 @@ bov x
 trade
 /pub
 h: neg hopen `:ypricing.com:5010
-r: 
+r:
 
 value r
 h(".u.upd";`trade; 1_value flip trade)
