@@ -5,7 +5,7 @@
 /3. copy response from link that looks like https://instantsearch.jitta.com/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%20(lite)%203.24.8%3Breact-instantsearch%204.1.3%3BJS%20Helper%202.23.2&x-algolia-application-id=L6HU33HKS0&x-algolia-api-key=8fa6652dfc7f2225015b6d6613466a82
 
 
-readJsonResponse: {.j.k read1 `$(":jitta/", string x)}
+readJsonResponse: {.j.k read1 x}
 extractHits: {((x`results) 0)`hits}
 
 /rmCols: `objectID`role_jittstor
