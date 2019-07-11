@@ -1,10 +1,11 @@
-/ '. ./setenv.sh'
 /only need to login once per cookie session (not q session)
-/system "./login_tisco.sh"
-/system "./login_set.sh"
+/assume working dir is ./set
+/ '. ./linux/setenv.sh'
+/system "./linux/login_tisco.sh"
+/system "./linux/login_set.sh"
 
-.poll.fastquote: {raze system "./fastquote.sh ", string x};
-.poll.market: {raze system "./marketsummary.sh"};
+.poll.fastquote: {raze system "./linux/fastquote.sh ", string x};
+.poll.market: {raze system "./linux/marketsummary.sh"};
 
 .poll.row: {[sym]
   t1: .z.p;
@@ -15,7 +16,7 @@
   `timestamp`sym`elapse`data!(t2; sym; elapse; dat)}
 
 /.poll.append: {[row] raw:: raw, row; save `raw}
-.poll.append: {[row] .[`:raw; (); ,; row]}
+.poll.append: {[row] .[`$":./data/raw"; (); ,; row]}
 
 /figure out syms to poll
 m: `market /index seems to be updated once every 10-20seconds
