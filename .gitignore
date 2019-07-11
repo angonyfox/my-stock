@@ -8,3 +8,4 @@ set/win/setenv.bat
 setenv.sh
 data/
 .DS_Store
+.Rproj.user
