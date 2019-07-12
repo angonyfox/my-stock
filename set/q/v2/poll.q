@@ -16,7 +16,8 @@
   `timestamp`sym`elapse`data!(t2; sym; elapse; dat)}
 
 /.poll.append: {[row] raw:: raw, row; save `raw}
-.poll.append: {[row] .[`$":./data/raw"; (); ,; row]}
+.poll.file: {`$(string `:data/raw), ssr[string .z.d; "."; ""]}
+.poll.append: {[f; row] .[f; (); ,; row]}
 
 /figure out syms to poll
 m: `market /index seems to be updated once every 10-20seconds
@@ -31,19 +32,35 @@ o1: {.poll.oi :: mod[.poll.oi + 1; count options]; options[.poll.oi]} /take one 
 
 .poll.all: {.poll.row each .poll.syms[]}
 
+.poll.schedule: {[file; start; end]
+  while[.z.T<=start; -1 (string .z.P), " sleeping until ", (string start); system "sleep 30"];
+  -1 "start polling until ", string end;
+  while[.z.T<=end; .poll.append[file] .poll.all[]]}
+
+
 \
 \l ../q/v2/poll.q
+/ '. ./linux/setenv.sh'
+/system "./linux/login_tisco.sh"
+/system "./linux/login_set.sh"
+.poll.schedule[.poll.file[]; 11:45; 14:32]
+.poll.schedule[.poll.file[]; 16:30; 19:02]
+
+
+
 .poll.all[]
 /start polling forever until interrupt (ctrl + c in q) - WARNING: do not run this in sublime because it will block the editor
 while[1b; .poll.append .poll.all[]]
 while[.z.T<=14:32; .poll.append .poll.all[]]
 while[.z.T<=19:02; .poll.append .poll.all[]]
+
+
 /to reset raw
 raw: ([]timestamp: `timestamp$(); sym: `symbol$(); elapse: `timespan$(); data: ())
 raw: 0#raw;save `raw
 load `:raw
 value `:raw
-.poll.append .poll.all[]
+.poll.append[.poll.file[]] .poll.all[]
 .poll.all[]
 
 .poll.append .poll.row `S50U19
