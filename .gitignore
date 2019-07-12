@@ -9,3 +9,5 @@ setenv.sh
 data/
 .DS_Store
 .Rproj.user
+r/out/*.png
+.Rhistory
