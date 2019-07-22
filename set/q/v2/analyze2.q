@@ -28,6 +28,8 @@ ticker: update "T"$time, "S"$side from ticker
 x: select timestamp, sym, bo, bov from x2
 
 optCast: {[newType; data] @[data; where 10h=type each data; newType$]}
-
-
 quote: raze {a: 2 cut optCast["F"] x`bo; b: 2 cut x`bov; flip `timestamp`sym`lvl`bid`ask`bidQty`askQty!flip (value 2#x) ,/: (`l1`l2`l3`l4`l5),' a,' b} each x
+
+x: 10#x2
+x`ticker
+({enlist (x; y)}':) til 10

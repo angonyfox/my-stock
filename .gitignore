@@ -7,7 +7,9 @@ output2.txt
 set/win/setenv.bat
 setenv.sh
 data/
+data2/
 .DS_Store
 .Rproj.user
 r/out/*.png
+r/mov/*.mp4
 .Rhistory

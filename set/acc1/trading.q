@@ -13,12 +13,11 @@ s: `AEONTS`AP`ASIMAR`ASK`ASP`BAY`BKI`FNS`FORTH`FSMART`KGI`LALIN`LIT`PT`PTTGC`S11
 q: 600 11400 35400 4500 26500 2500 300 22400 14800 10600 25700 17200 12900 15100 1300 13500 3800 14040 11700 2400 4100 400 8800 2000 17250 4400 1200 1500 8800 3800
 o: ([] sym: s; sellingQty: q)
 
-.set.int.portfolio: {0N!raze system "../linux/portfolio.sh"}
-pf: .set.portfolio[]
 
 /check selling qty against position
 o: update remainingQty: pos - sellingQty from o lj select pos: last qty by sym from pf
 
+.set.int.portfolio: {0N!raze system "../linux/portfolio.sh"}
 .set.int.fastquote: {raze system "../linux/fastquote.sh ", string x}
 .set.int.orderStatus: {0N!raze system "../linux/orderstatus.sh"}
 .set.int.cancelOrder: {[sym; orderid] 0N!raze system "../linux/cancelorder.sh ", (string sym), " ", (string orderid)}
@@ -32,9 +31,12 @@ o: update remainingQty: pos - sellingQty from o lj select pos: last qty by sym f
 .set.placeBulkOrder
 /orders: select side: `B, sym: symbol, qty, price from adjPort
 
+pf: .set.portfolio[]
+
 /check quotes
 parseQuotesL1: {{((enlist `sym)!(enlist `$x`symbol)), first .set.int.parseBov x} each x}
 quotes: .set.fq each exec sym from o
+o: o lj 1!parseQuotesL1 quotes
 o: o lj 1!parseQuotesL1 quotes
 
 orders: select side: `S, sym, qty: sellingQty, price: ask from o where sym in `SF`THANI
