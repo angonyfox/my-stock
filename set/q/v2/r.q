@@ -1,4 +1,9 @@
-\o 7
+  \o 7
+/custom rdb which gets update from poll2.q
+/poll2.q constantly poll market data and trigger method `upd
+/at end of day (or star tof day), need to manually persist data to hdb and clear tables by calling `end and `reset (todo: automate this)
+/q q/v2/r.q -p 7779 -o 7
+
 /data
 ticker: ([] time:`timespan$(); sym: `symbol$(); tradeTime: `time$(); side: `symbol$(); qty: `float$(); price: `float$())
 bov: ([] time:`timespan$(); sym: `symbol$(); lvl: `symbol$(); bid: `float$(); ask: `float$(); bidQty: `float$(); askQty: `float$())
@@ -53,6 +58,13 @@ upd: {[table; row]
   lastRow::row; /for debugging
   }
 
+end: {[date] .Q.dpft[`:hdb; date; `sym] each tables `.}
+reset: {lastVol:: (enlist`)!enlist 0f; {x set 0#get x} each tables `.}
+
+/at eod call end .z.d to save data to hdb
+/if call from the next day
+/end .z.d - 1
+/reset[]
 /
 bv: .parse.bov[lastRow[0]; lastRow[1]; .j.k lastRow[3]]
 {x, y} over 1 2
