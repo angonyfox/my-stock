@@ -4,6 +4,10 @@
 /system "./linux/login_tisco.sh"
 /system "./linux/login_set.sh"
 /starts with local time zone -o 7
+
+/fetch market data, then trigger `upd on r.q. also persist raw data to `:data2/raw
+/at start of day, need to manually renew file name (todo: automate this)
+/q -p 7777 -o 7
 \o 7
 .poll.fastquote: {raze system "./linux/fastquote.sh ", string x};
 
@@ -24,11 +28,13 @@
   -1 "polling until ", string end;
   while[.z.T<=end; f[]]}
 
-.poll.doAll: {[sym; file; h] x: .poll.fetch[sym]; @[.poll.pub[h]; x; {-1 (string .z.P), " ERROR: pub '", x}]; .poll.append[file; x]}
+.poll.doAll: {[sym; file; h]
+  x: .poll.fetch[sym];
+  @[.poll.pub[h]; x; {-1 (string .z.P), " ERROR: pub '", x}];
+  @[.poll.append[file]; enlist x; {-1 (string .z.P), " ERROR: append '", x}]}
 
 f: .poll.file[]
 h: hopen `::7779
-
 
 
 \
@@ -39,7 +45,10 @@ system "./linux/login_set.sh"
 
 .poll.doAll[`S50U19; f; h]
 
+t: get[`:data2/raw20190723]
+
+
 /thai time
 .poll.schedule[{.poll.doAll[`S50U19; f; h]}; 09:45; 12:32]
-.poll.schedule[{.poll.doAll[`S50U19; f; h]}; 14:30; 17:02]
+.poll.schedule[{.poll.doAll[`S50U19; f; h]}; 14:15; 17:02]
 
