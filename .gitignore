@@ -6,10 +6,13 @@ output1.txt
 output2.txt
 set/win/setenv.bat
 setenv.sh
-data/
-data2/
+
 .DS_Store
 .Rproj.user
-r/out/*.png
+r/out*
 r/mov/*.mp4
 .Rhistory
+
+set/data/
+set/data2/
+set/hdb

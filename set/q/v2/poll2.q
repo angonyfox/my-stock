@@ -43,12 +43,17 @@ h: hopen `::7779
 system "./linux/login_tisco.sh"
 system "./linux/login_set.sh"
 
-.poll.doAll[`S50U19; f; h]
-
-t: get[`:data2/raw20190723]
-
-
 /thai time
+f: .poll.file[]
 .poll.schedule[{.poll.doAll[`S50U19; f; h]}; 09:45; 12:32]
-.poll.schedule[{.poll.doAll[`S50U19; f; h]}; 14:15; 17:02]
+.poll.schedule[{.poll.doAll[`S50U19; f; h]}; 14:15; 17:00]
 
+/test
+.poll.doAll[`S50U19; f; h]
+.poll.fetch `S50U19
+
+/fix broken raw
+t: get[`:data2/raw20190808]
+t2:29900 # t
+set[`:data2/raw20190726] t2
+set[`:data2/raw20190725] t2

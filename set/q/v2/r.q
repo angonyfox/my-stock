@@ -58,8 +58,8 @@ upd: {[table; row]
   lastRow::row; /for debugging
   }
 
-end: {[date] .Q.dpft[`:hdb; date; `sym] each tables `.}
-reset: {lastVol:: (enlist`)!enlist 0f; {x set 0#get x} each tables `.}
+end: {[date] .Q.dpft[`:hdb; date; `sym] each `ticker`bov`indicator}
+reset: {lastVol:: (enlist`)!enlist 0f; {x set 0#get x} each `ticker`bov`indicator}
 
 /at eod call end .z.d to save data to hdb
 /if call from the next day
@@ -75,3 +75,5 @@ select from bov where time within(0D10:00;0D10:05)
 wavg
 ticker
 upd[`raw; old]
+
+first ticker
