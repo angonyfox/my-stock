@@ -28,6 +28,9 @@ load_cond=function(h, cond){
 load_window=function(window){load_cond(hrdb, paste0("time > .z.P - ", window))}
 load_period=function(from, to){load_cond(hrdb, paste0("time within(", from, ";", to, ")"))}
 load_period_window=function(from, window){load_cond(hrdb, paste0("time within(", from, ";", from, "+", window, ")"))}
+load_period_hdb=function(date, from, to){load_cond(hhdb, paste0("date=", date, ",time within(", from, ";", to, ")"))}
+load_period_window_hdb=function(date, from, window){load_cond(hhdb, paste0("date=", date, ",time within(", from, ";", from, "+", window, ")"))}
+
 plot_tqb=function(dat){
   ft=dat[["t"]]
   fq=dat[["q"]]
