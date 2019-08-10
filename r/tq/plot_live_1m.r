@@ -4,6 +4,8 @@
 #generate real-time market depth plot live/live.png using last 1 minute data from r.q
 source("tq/plot.r")
 
+hrdb = open_connection('localhost',7779) #this open a connection
+
 print_error=function(x){print(paste(with_tz(Sys.time(), tzone="Japan"), x))}
 plot_live=function(window, file){
   dat=load_window(window)

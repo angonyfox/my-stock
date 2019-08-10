@@ -31,7 +31,9 @@ plot_tqb(dat)
 plot_tqbx(dat)
 dat[["t"]]
 
-load_period_hdb=function(date, from, to){load_cond(paste0("date=", date, ",time within(", from, ";", to, ")"))}
-load_period_window_hdb=function(date, from, window){load_cond(paste0("date=", date, ",time within(", from, ";", from, "+", window, ")"))}
+hhdb = open_connection('localhost',7778) #this open a connection
+load_period_hdb=function(date, from, to){load_cond(hhdb, paste0("date=", date, ",time within(", from, ";", to, ")"))}
+load_period_window_hdb=function(date, from, window){load_cond(hhdb, paste0("date=", date, ",time within(", from, ";", from, "+", window, ")"))}
 
-load_period_hdb("2019.08.07", "0D10:00", "0D10:01")
+dat=load_period_hdb("2019.08.07", "0D10:00", "0D10:01")
+plot_tqb(dat)

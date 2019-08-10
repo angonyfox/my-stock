@@ -9,10 +9,9 @@ source("tq/scale.r")
 
 Sys.setenv(TZ='GMT') #need this or else, the timezone of t$date will be off
 .ggplot.legend_bottom = theme(legend.position = "bottom")
-h3 = open_connection('localhost',7779) #this open a connection
 
 load_cond=function(h, cond){
-  #t = execute(h3, paste("update time + .z.d, tradeTime + .z.d from select from ticker where ", cond))
+  #t = execute(hrdb, paste("update time + .z.d, tradeTime + .z.d from select from ticker where ", cond))
   t = execute(h, paste("update time + .z.d, tradeTime:time + .z.d from select from ticker where ", cond))
   q = execute(h, paste("update time + .z.d from select from bov where ", cond))
   b = execute(h, paste("update time + .z.d from select from indicator where ", cond))
@@ -26,9 +25,9 @@ load_cond=function(h, cond){
   return(list("t"=t, "q"=q, "b"=b))
 }
 
-load_window=function(window){load_cond(h3, paste0("time > .z.P - ", window))}
-load_period=function(from, to){load_cond(h3, paste0("time within(", from, ";", to, ")"))}
-load_period_window=function(from, window){load_cond(h3, paste0("time within(", from, ";", from, "+", window, ")"))}
+load_window=function(window){load_cond(hrdb, paste0("time > .z.P - ", window))}
+load_period=function(from, to){load_cond(hrdb, paste0("time within(", from, ";", to, ")"))}
+load_period_window=function(from, window){load_cond(hrdb, paste0("time within(", from, ";", from, "+", window, ")"))}
 plot_tqb=function(dat){
   ft=dat[["t"]]
   fq=dat[["q"]]

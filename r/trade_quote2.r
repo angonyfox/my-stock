@@ -1,5 +1,6 @@
 source("tq/plot.r")
 
+hrdb = open_connection('localhost',7779) #this open a connection
 
 dat=load_window("0D00:01")
 dat=load_period("0D10:34", "0D10:35")
