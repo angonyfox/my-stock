@@ -39,3 +39,8 @@ dat[["q"]]
 
 x=gsub("-", ".", c("2019-08-08"))
 print(x)
+library(lubridate)
+ymd_hm("2000-01-01T09:45")
+as.POSIXct("2000-01-01T09:45")
+as.Date("2000-01-01") + hm("00:01")
+hm("09:45:00")
