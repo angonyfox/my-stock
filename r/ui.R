@@ -22,7 +22,7 @@ shinyUI(fluidPage(
                          timeFormat="%H:%M:%S",
                          timezone="+0000",
                          width="100%",
-                         step=5,
+                         step=5, #seconds
                          animate=TRUE
                          )),
     fluidRow(
@@ -39,7 +39,7 @@ shinyUI(fluidPage(
                fluidRow(
                    column(2, actionButton("back", "<")),
                    column(2, actionButton("forward", ">")),
-                   column(6, textInput("step", "Step", value = "00:00:30"))
+                   column(6, textInput("step", NULL, value = "00:00:30"))
                )
                )
     )
