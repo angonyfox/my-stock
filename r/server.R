@@ -29,6 +29,7 @@ d = as.Date("2000-01-01")
 shinyServer(function(input, output, clientData, session) {
     t <- reactiveVal(d + hm("10:00")) #current time to plot
     
+    #sync slider and startTime text input
     observeEvent(input$timeSlider, {
         newValue = input$timeSlider
         print(newValue)
@@ -42,7 +43,7 @@ shinyServer(function(input, output, clientData, session) {
         if (t() != newValue) {
             t(newValue)
             updateSliderInput(session,
-                              "time",
+                              "timeSlider",
                               value = newValue,
                               timeFormat = "%H:%M:%S")
         }
