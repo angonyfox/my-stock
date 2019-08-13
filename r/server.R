@@ -9,7 +9,7 @@
 
 library(shiny)
 
-
+library(rkdb)
 tryCatch({
     hrdb = open_connection('localhost', 7779) #this open a connection
 }, error = function(x) {
@@ -21,7 +21,7 @@ tryCatch({
 }, error = function(x) {
     warning("hdb connection: ", x)
 })
-source("tq/plot.r")
+source("tq/plot.r", local=TRUE)
 
 d = as.Date("2000-01-01")
 
@@ -34,7 +34,6 @@ shinyServer(function(input, output, clientData, session) {
         print(newValue)
         newValueStr = format(newValue, "%H:%M:%S")
         if (t() != newValue) {
-            #t(newValue)
             updateTextInput(session, "startTime", value = newValueStr)
         }
     })
