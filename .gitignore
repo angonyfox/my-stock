@@ -16,3 +16,7 @@ r/mov/*.mp4
 set/data/
 set/data2/
 set/hdb
+
+r/ticker/*
+!r/ticker/*.r
+r/live/live.png

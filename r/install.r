@@ -23,3 +23,6 @@ install.packages("gridExtra")
 
 #for arranging plots see: https://github.com/thomasp85/patchwork
 devtools::install_github("thomasp85/patchwork")
+
+install.packages("foreach")
+install.packages("scales")
