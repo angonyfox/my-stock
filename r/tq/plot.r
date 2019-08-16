@@ -41,7 +41,7 @@ plot_tqb=function(dat){
   p=p + geom_raster(data=fq, aes(x=time, y=bid, fill=bidQty), vjust=0, hjust=0)
   p=p + geom_raster(data=fq, aes(x=time, y=ask, fill=askQty), vjust=1, hjust=0) 
   #trade
-  p=p + geom_jitter(data=ft, aes(x=tradeTime, y=price, color=side, size=qty, shape=side), width=0, height=0.035) 
+  p=p + geom_point(data=ft, aes(x=tradeTime, y=price, color=side, size=qty, shape=side)) #for jitter , width=0, height=0.035 
   #styling
   p=p + .scale.qty + .scale.side_col + .scale.side_shape + .scale.quote_fill + .ggplot.legend_bottom + .scale.time
   #overlay basis

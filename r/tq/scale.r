@@ -1,3 +1,4 @@
+library(ggplot2)
 .scale.qty=scale_size(breaks=c(25, 50, 100, 200), limits=c(1, 200), range=c(0.1, 15))
 .scale.side_col=scale_colour_manual(values=c("B" = "darkgreen", "S" = "darkred", "U" = "blue", "NS"="grey"))
 .scale.side_fill=scale_fill_manual(values=c("B" = "darkgreen", "S" = "darkred", "U" = "blue", "NS"="grey"))

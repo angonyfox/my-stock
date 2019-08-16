@@ -73,7 +73,7 @@ shinyServer(function(input, output, clientData, session) {
             if (wt == "end") {
                 dat = load_period(s, e)
             } else {
-                dat = load_period_window(d, s, e)
+                dat = load_period_window(s, e)
             }
         } else {
             if (wt == "end") {

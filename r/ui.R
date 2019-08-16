@@ -13,7 +13,7 @@ d=as.Date("2000-01-01")
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-    plotOutput("distPlot"),
+    plotOutput("distPlot", height="600px"),
     hr(),
     fluidRow(sliderInput("timeSlider", "", 
                          min=d + hms("09:45:00"),
