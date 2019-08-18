@@ -24,6 +24,7 @@ t = read.csv(file="ticker/CPALL_Ticker_2019-08-15.csv", header=TRUE, sep=",")
 t = read.csv(file="ticker/AOT_Ticker_2019-08-15.csv", header=TRUE, sep=",")
 t = read.csv(file="ticker/20190815/OSP/All_Ticker_2019-08-15.csv", header=TRUE, sep=",")
 t = read.csv(file="ticker/20190815/CPALL/All_Ticker_2019-08-15.csv", header=TRUE, sep=",")
+t = read.csv(file="ticker/csv/20190816/CPALL.csv", header=TRUE, sep=",")
 
 #todo
 #add date to plot title
@@ -47,9 +48,10 @@ load_ticker_file=function(date, sym){
   return(normalize_ticker(t) %>% mutate(sym=sym))
 }
 
-plot_ticker=function(ft){
+plot_ticker=function(ft, max_size=20){
+  title=paste(first(ft$date), "-", first(ft$sym))
   p = ggplot(ft, aes(x=tradeTime, y=price, col=side, shape=side, size=qty)) + geom_point() 
-  p1 = p + .scale.side_col + .scale.side_shape + scale_size(range=c(0.1, max_size)) + clean_theme + ggtitle(first(ft$sym))
+  p1 = p + .scale.side_col + .scale.side_shape + scale_size(range=c(0.1, max_size)) + clean_theme + ggtitle(title)
   
   #p = ggplot(ft, aes(x=tradeTime, y=qty, col=side, shape=side, size=qty)) + geom_point() 
   #p2 = p + .scale.side_col + .scale.side_shape + scale_size(range=c(0.1, max_size)) + clean_theme
@@ -66,6 +68,8 @@ plot_ticker=function(ft){
   return(pp)
 }
 
+filename=function(f){return(strsplit(f, "[.]")[[1]][1])}
+
 t=load_ticker_file("20190815", "ADVANC")
 plot_ticker(t)
 plot_ticker(load_ticker_file("20190815", "XO"))
@@ -74,22 +78,27 @@ plot_ticker(load_ticker_file("20190815", "CPF") %>% filter(side != "U"))
 plot_ticker(load_ticker_file("20190815", "BBL") %>% filter(side != "U"))
 
 
-foreach(sym=list.files("ticker/20190815")) %do% print(sym)
-unlink("ticker/20190815/output")
-foreach(sym=list.files("ticker/20190816")) %do% 
+foreach(sym=list.files("ticker/csv/20190816")) %do% print(sym)
+unlink(paste0("ticker/output/", d))
+d="20190815"
+dir.create(paste0("ticker/output/", d))
+foreach(sym=list.files(paste0("ticker/csv/", d))) %do% 
   ggsave(
-    plot=plot_ticker(load_ticker_file("20190816", sym)),
-    filename=paste0("ticker/20190816/output/", sym, ".png"), 
+    plot=plot_ticker(load_ticker_file(d, filename(sym))),
+    filename=paste0("ticker/output/", d, "/", filename(sym), ".png"), 
     dpi=120, width=10, height=12, units="in"
     )
 
+t=load_ticker_file("20190816", "ADVANC")
 #filter
 t=t %>% filter(side != "U") # remove opening auction so we can get better scale Volume
 
 ft=t
-ft=t %>% filter(time >= hm("09:45") & hm("10:55") >= time ) # remove opening auction so we can get better scale Volume
+ft=t %>% filter(time >= hm("12:00") & hm("12:20") >= time ) # remove opening auction so we can get better scale Volume
 ft=t %>% filter(session=="mng") # remove opening auction so we can get better scale Volume
 ft=t %>% filter(session=="aft") # remove opening auction so we can get better scale Volume
+
+plot_ticker(ft)
 
 
 #only plot small Volume - to see algo or retail orders
@@ -97,5 +106,3 @@ ft=t %>% filter(qty <= 10000)
 ft=t %>% filter(qty <= 1000)
 #only plot big Volume - to see big market movers
 ft=t %>% filter(qty >= 10000)
-max_size=0.5
-max_size=20
