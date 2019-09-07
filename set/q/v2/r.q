@@ -77,3 +77,4 @@ ticker
 upd[`raw; old]
 
 first ticker
+select from ticker where qty>200

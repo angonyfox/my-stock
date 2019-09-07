@@ -6,6 +6,6 @@ indicator
 last indicator
 
 reset[]
-t: get[`:data2/raw20190808]
+t: get[`:data2/raw20190902]
 {@[upd[`raw];  value x; {-1 (string .z.P), " ERROR: upd '", x}]} each t
-end 2019.08.08
+end 2019.09.02

@@ -33,8 +33,13 @@
   @[.poll.pub[h]; x; {-1 (string .z.P), " ERROR: pub '", x}];
   @[.poll.append[file]; enlist x; {-1 (string .z.P), " ERROR: append '", x}]}
 
-f: .poll.file[]
 h: hopen `::7779
+
+system "./linux/login_tisco.sh"
+system "./linux/login_set.sh"
+
+f: .poll.file[]
+.poll.schedule[{.poll.doAll[`S50U19; f; h]}; 09:45; 12:32];.poll.schedule[{.poll.doAll[`S50U19; f; h]}; 14:15; 17:00]
 
 
 \
