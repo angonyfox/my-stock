@@ -1,3 +1,8 @@
+#
+# DEPRECATED 2019/08/22): use plot_ticker.r and analyze_ticker.r
+#
+
+
 library(lubridate)
 library(patchwork)
 library(dplyr)
@@ -44,7 +49,7 @@ normalize_ticker=function(t){
 }
 
 load_ticker_file=function(date, sym){
-  t=read.csv(file=paste0("ticker/", date,"/", sym, "/All_Ticker_2019-08-16.csv"), header=TRUE, sep=",")
+  t=read.csv(file=paste0("ticker/csv/", date,"/", sym, ".csv"), header=TRUE, sep=",")
   return(normalize_ticker(t) %>% mutate(sym=sym))
 }
 
@@ -56,11 +61,11 @@ plot_ticker=function(ft, max_size=20){
   #p = ggplot(ft, aes(x=tradeTime, y=qty, col=side, shape=side, size=qty)) + geom_point() 
   #p2 = p + .scale.side_col + .scale.side_shape + scale_size(range=c(0.1, max_size)) + clean_theme
   
-  vpm=ft %>% group_by(time=as.POSIXct(floor_date(tradeTime, unit="minute")), side, session) %>% summarise(qty=sum(qty))
-  p3=ggplot(vpm, aes(x=time, y=qty/1000, fill=side, col=side)) + geom_col() + .scale.side_fill + .scale.side_col + clean_theme + scale_y_continuous(label=unit_format(unit="k"))
-  
-  cpm=ft %>% group_by(time=as.POSIXct(floor_date(tradeTime, unit="minute")), side, session) %>% summarise(n = n())
-  p4=ggplot(cpm, aes(x=time, y=n, fill=side, col=side)) + geom_col() + .scale.side_fill + .scale.side_col + clean_theme
+  pm=ft %>% group_by(time=as.POSIXct(floor_date(tradeTime, unit="minute")), side, session) %>% summarise(qty=sum(qty), n=n())
+  #volume
+  p3=ggplot(pm, aes(x=time, y=qty/1000, fill=side, col=side)) + geom_col() + .scale.side_fill + .scale.side_col + clean_theme + scale_y_continuous(label=unit_format(unit="k"))
+  #count
+  p4=ggplot(pm, aes(x=time, y=n, fill=side, col=side)) + geom_col() + .scale.side_fill + .scale.side_col + clean_theme
   
   #pp=p1 + p2 + p3 + p4 + plot_layout(ncol=1)
   pp=p1 + p3 + p4 + plot_layout(ncol=1)
@@ -70,17 +75,26 @@ plot_ticker=function(ft, max_size=20){
 
 filename=function(f){return(strsplit(f, "[.]")[[1]][1])}
 
-t=load_ticker_file("20190815", "ADVANC")
+t=load_ticker_file("20190821", "NER")
 plot_ticker(t)
 plot_ticker(load_ticker_file("20190815", "XO"))
 plot_ticker(load_ticker_file("20190815", "SCB"))
 plot_ticker(load_ticker_file("20190815", "CPF") %>% filter(side != "U"))
 plot_ticker(load_ticker_file("20190815", "BBL") %>% filter(side != "U"))
 
+head(t)
+pm=t %>% 
+  group_by(time=as.POSIXct(floor_date(tradeTime, unit="minute")), side, session) %>% 
+  summarise(qty=sum(qty), n=n())
+head(pm)
+cumpm=pm %>% group_by(side, session) %>% mutate(cumqty=cumsum(qty), cumn=cumsum(n))
+
+ggplot(cumpm, aes(x=time, y=cumqty, col=side)) + geom_line() + .scale.side_col + facet_grid(.~session, scales="free_x")
+ggplot(cumpm, aes(x=time, y=cumn, col=side)) + geom_line() + .scale.side_col
 
 foreach(sym=list.files("ticker/csv/20190816")) %do% print(sym)
 unlink(paste0("ticker/output/", d))
-d="20190815"
+d="20190828"
 dir.create(paste0("ticker/output/", d))
 foreach(sym=list.files(paste0("ticker/csv/", d))) %do% 
   ggsave(
@@ -89,7 +103,7 @@ foreach(sym=list.files(paste0("ticker/csv/", d))) %do%
     dpi=120, width=10, height=12, units="in"
     )
 
-t=load_ticker_file("20190816", "ADVANC")
+
 #filter
 t=t %>% filter(side != "U") # remove opening auction so we can get better scale Volume
 
